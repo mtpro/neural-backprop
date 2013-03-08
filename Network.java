@@ -9,14 +9,21 @@ import java.util.Arrays;
 
 public class Network {
 	
+	private static double LEAST_MEAN_SQUARED_ERROR = 0.01;
+	private static double LEARNING_RATE = 0.25;
+	private static double MOMENTUM = 0.8;
+	
 	ArrayList<Layer> layers;
+	
 	private double least_mean_squared_error;
 	private double momentum;
 	private double learning_rate;
+	private int epochs;
 	
 	public Network(double lmse, double p, double lr) {
 		least_mean_squared_error = lmse;
 		momentum = p;
+		epochs = 0;
 		learning_rate = lr;
 		layers = new ArrayList<Layer>();
 	}
@@ -95,10 +102,11 @@ public class Network {
 	}
 	
 	// Train the network via backpropagation of error
-	public void train(ArrayList<double[]> inputs, ArrayList<Double> expectedOutputs) throws Exception {
+	public boolean train(ArrayList<double[]> inputs, ArrayList<Double> expectedOutputs) throws Exception {
 		if (inputs.size() != expectedOutputs.size()) {
 			throw new Exception(String.format("Input ArrayList size: %1$s  ExpectedOutput size: %2$s", inputs.size(), expectedOutputs.size()));
 		}
+		double mse = 0.0d;
 		
 		for (int i = 0; i < inputs.size(); ++i) {
 			// 1. Simulate network on input
@@ -118,15 +126,22 @@ public class Network {
 			for (int j = 1; j < layers.size(); ++j) {
 				layers.get(j).correctWeights(learning_rate, momentum);
 			}
+			
+			// Update mean-squared-error
+			mse += Math.pow(layers.get(layers.size()-1).get(0).output_value - expectedOutputs.get(i), 2);
 		}
+		
+		epochs++;
+		return (mse / (double) inputs.size()) < least_mean_squared_error;
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Network ann = new Network(0.0d, 0.8d, 0.30d);
+		Network ann = new Network(LEAST_MEAN_SQUARED_ERROR, MOMENTUM, LEARNING_RATE);
 		ann.initialize(2, 3, 1);
 		
+		// These could easily be loaded in from a file
 		ArrayList<double[]> in = new ArrayList<double[]>();
-		in.add(new double[] { 0.0d, 0.0d, }); 
+		in.add(new double[] { 0.0d, 0.0d }); 
 		in.add(new double[] { 1.0d, 1.0d }); 
 		in.add(new double[] { 1.0d, 0.0d }); 
 		in.add(new double[] { 0.0d, 1.0d }); 
@@ -137,16 +152,10 @@ public class Network {
 			expected.add(answers[i]);
 		}
 		
-		for (int i = 0; i < 40000; ++i)
-			ann.train(in, expected); 
+		// Train the network on these inputs and outputs
+		while (! ann.train(in, expected));
 		
-		ann.simulate(new double[] { 0.0d, 1.0d });
-		System.out.println("0, 1: "+ann.layers.get(ann.layers.size()-1).get(0).output_value);
-		ann.simulate(new double[] { 1.0d, 0.0d });
-		System.out.println("1, 0: "+ann.layers.get(ann.layers.size()-1).get(0).output_value);
-		ann.simulate(new double[] { 1.0d, 1.0d });
-		System.out.println("1, 1: "+ann.layers.get(ann.layers.size()-1).get(0).output_value);
-		ann.simulate(new double[] { 0.0d, 0.0d });
-		System.out.println("0, 0: "+ann.layers.get(ann.layers.size()-1).get(0).output_value);
+		// How many epochs did it take for the network to learn?
+		System.out.println(ann.epochs+" epochs for least mean square error of "+ann.least_mean_squared_error);
 	}
 }
