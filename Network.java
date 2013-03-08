@@ -138,7 +138,7 @@ public class Network {
 			expected.add(answers[i]);
 		}
 		
-		for (int i = 0; i < 20000; ++i)
+		for (int i = 0; i < 40000; ++i)
 			ann.train(in, expected); 
 		
 //		System.out.println();
