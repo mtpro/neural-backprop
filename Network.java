@@ -92,7 +92,6 @@ public class Network {
 		for (int i = 1; i < layers.size(); ++i) {
 			layers.get(i).calculateOutput();
 		}
-		System.out.println(layers.get(layers.size()-1).get(0).output_value);
 	}
 	
 	// Train the network via backpropagation of error
@@ -141,6 +140,13 @@ public class Network {
 		for (int i = 0; i < 40000; ++i)
 			ann.train(in, expected); 
 		
-//		System.out.println();
+		ann.simulate(new double[] { 0.0d, 1.0d });
+		System.out.println("0, 1: "+ann.layers.get(ann.layers.size()-1).get(0).output_value);
+		ann.simulate(new double[] { 1.0d, 0.0d });
+		System.out.println("1, 0: "+ann.layers.get(ann.layers.size()-1).get(0).output_value);
+		ann.simulate(new double[] { 1.0d, 1.0d });
+		System.out.println("1, 1: "+ann.layers.get(ann.layers.size()-1).get(0).output_value);
+		ann.simulate(new double[] { 0.0d, 0.0d });
+		System.out.println("0, 0: "+ann.layers.get(ann.layers.size()-1).get(0).output_value);
 	}
 }
