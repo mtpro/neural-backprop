@@ -26,7 +26,7 @@ public abstract class Neuron {
 		return this.delta;
 	}
 	
-	public double getOutput() {
+	public void calculateOutput() {
 		weighted_inputs_sum = 0.0;
 		for (Link link : layer.getLinks()) {
 			if (link.isTo(this)) {
@@ -35,7 +35,6 @@ public abstract class Neuron {
 		}
 		
 		this.output_value = activation_function(weighted_inputs_sum);
-		return output_value;
 	}
 	
 	public double getOutputValue() {

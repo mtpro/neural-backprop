@@ -46,14 +46,14 @@ public class Layer extends ArrayList<Neuron> {
 		Random generator = new Random();
 		for (Neuron p : this.prev) {
 			for (Neuron c : this) {
-				links.add(new Link(p, c, (generator.nextBoolean()) ? generator.nextDouble()/5.0d : 0-generator.nextDouble()/5.0d));
+				links.add(new Link(p, c, (generator.nextBoolean()) ? generator.nextDouble()/2.0d : 0-generator.nextDouble()/2.0d));
 			}
 		}
 	}
 	
-	public void getOutput() {
+	public void calculateOutput() {
 		for (Neuron n : this) {
-			n.getOutput();
+			n.calculateOutput();
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class Layer extends ArrayList<Neuron> {
 			l.weight += momentum * (l.weight_old - l.weight_old_old);
 			l.weight += learning_rate *
 					l.toNeuron().getDelta() * 
-					l.fromNeuron().getOutput();
+					l.fromNeuron().getOutputValue();
 		
 		}
 	}

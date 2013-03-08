@@ -61,7 +61,7 @@ public class Network {
 			}
 		}
 		
-		// bias node
+//		bias node
 		inputLayer.add(new InputLayerNeuron(inputLayer));
 		
 		for (int i = 0; i < numHiddenLayers; ++i) {
@@ -77,7 +77,7 @@ public class Network {
 	}
 	
 	public void simulate(double[] inputs) throws Exception {
-		if (inputs.length != layers.get(0).size() - 1 ) {
+		if (inputs.length != layers.get(0).size() - 1) {
 			throw new Exception(String.format("Input size: %1$s  Expected: %2$s", inputs.length, layers.get(0).size()));
 		}
 		
@@ -89,8 +89,8 @@ public class Network {
 		InputLayerNeuron biasNode = (InputLayerNeuron) inputLayer.get(inputs.length);
 		biasNode.setInput(1.0d);
 		
-		for (int i = 0; i < layers.size(); ++i) {
-			layers.get(i).getOutput();
+		for (int i = 1; i < layers.size(); ++i) {
+			layers.get(i).calculateOutput();
 		}
 		System.out.println(layers.get(layers.size()-1).get(0).output_value);
 	}
@@ -123,23 +123,24 @@ public class Network {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Network ann = new Network(0.0d, 0.85d, 0.15d);
-		ann.initialize(2, 1, 1);
+		Network ann = new Network(0.0d, 0.8d, 0.30d);
+		ann.initialize(2, 3, 1);
 		
 		ArrayList<double[]> in = new ArrayList<double[]>();
 		in.add(new double[] { 0.0d, 0.0d, }); 
+		in.add(new double[] { 1.0d, 1.0d }); 
 		in.add(new double[] { 1.0d, 0.0d }); 
 		in.add(new double[] { 0.0d, 1.0d }); 
-		in.add(new double[] { 1.0d, 1.0d }); 
 		
 		ArrayList<Double> expected = new ArrayList<Double>();
-		double[] answers = new double[] { 0.0d, 1.0d, 1.0d, 0.0d };
+		double[] answers = new double[] { 0.0d, 0.0d, 1.0d, 1.0d };
 		for (int i = 0; i < answers.length; ++i) {
 			expected.add(answers[i]);
 		}
 		
-		for (int i = 0; i < 2500; ++i)
+		for (int i = 0; i < 20000; ++i)
 			ann.train(in, expected); 
 		
+//		System.out.println();
 	}
 }

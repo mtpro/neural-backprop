@@ -31,8 +31,8 @@ public class InputLayerNeuron extends Neuron {
 	}
 	
 	@Override
-	public double getOutput() {
-		return weighted_inputs_sum;
+	public void calculateOutput() {
+		return;
 	}
 
 }
