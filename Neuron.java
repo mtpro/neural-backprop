@@ -35,6 +35,9 @@ public abstract class Neuron {
 		}
 		
 		this.output_value = activation_function(weighted_inputs_sum);
+		if (this instanceof OutputLayerNeuron) {
+//			System.out.println("Weighted inputs sum: "+weighted_inputs_sum);
+		}
 	}
 	
 	public double getOutputValue() {
